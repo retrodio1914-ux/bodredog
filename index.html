@@ -1,63 +1,182 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8">
-<title>Bodredog</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>bodredog</title>
 
-<style>
-  body{
-    margin:0;
-    min-height:100vh;
-    background:url("hero.png") center/cover no-repeat fixed;
-    font-family: serif;
-  }
-  #muteBtn{
-    position:fixed;
-    bottom:24px;
-    right:24px;
-    width:44px;
-    height:44px;
-    border-radius:50%;
-    border:1px solid rgba(255,255,255,.25);
-    background:rgba(255,255,255,.22);
-    backdrop-filter: blur(8px);
-    color:#fff;
-    font-size:18px;
-    cursor:pointer;
-  }
-</style>
+  <style>
+    /* 배경(대문) */
+    body{
+      margin:0;
+      min-height:100vh;
+      background: url("hero.png") center/cover no-repeat fixed;
+      font-family: serif;
+    }
+
+    /* 상단 심볼 버튼(임시: 텍스트/이모지) */
+    #symbolBtn{
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 50;
+      cursor: pointer;
+      width: 54px;
+      height: 54px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(8px);
+      color:#fff;
+      user-select:none;
+      font-size: 20px;
+    }
+
+    /* 음소거 버튼 */
+    #muteBtn{
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      z-index: 50;
+      cursor: pointer;
+      width: 54px;
+      height: 54px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(8px);
+      color:#fff;
+      user-select:none;
+      font-size: 18px;
+    }
+
+    /* 생각의 창(오버레이) */
+    #thoughtOverlay{
+      position: fixed;
+      inset: 0;
+      display: none;               /* 기본은 숨김 */
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(6px);
+      z-index: 999;
+      padding: 24px;
+    }
+
+    /* 창 내용 박스 */
+    .thoughtBox{
+      width: min(760px, 92vw);
+      padding: 56px 44px;
+      border-radius: 18px;
+      color: #fff;
+      line-height: 1.9;
+      font-size: 18px;
+      letter-spacing: 0.01em;
+
+      /* ✅ 지금은 hero.png를 임시로 사용
+         나중에 about-bg.png 같은 파일을 올리면 여기만 바꾸면 됨 */
+      background: url("hero.png") center/cover no-repeat;
+      box-shadow: 0 30px 90px rgba(0,0,0,.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 글 가독성용 어두운 막 */
+    .thoughtBox::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: rgba(0,0,0,.35);
+    }
+
+    .thoughtText{
+      position: relative;
+      z-index: 1;
+      white-space: pre-line;
+    }
+
+    /* (선택) 작은 닫기 안내 */
+    .hint{
+      position: relative;
+      z-index: 1;
+      margin-top: 22px;
+      opacity: .75;
+      font-size: 13px;
+    }
+  </style>
 </head>
 
 <body>
 
-<audio id="bgm" loop preload="auto">
-  <source src="music.mp3" type="audio/mpeg">
-</audio>
+  <!-- ✅ 상단 심볼 버튼: 일단 임시로 🐾🌿 (나중에 이미지로 바꾸기 가능) -->
+  <div id="symbolBtn" title="보드레도그의 생각">🐾🌿</div>
 
-<button id="muteBtn">🔇</button>
+  <!-- ✅ 음악 -->
+  <audio id="bgm" loop preload="auto">
+    <source src="music.mp3" type="audio/mpeg">
+  </audio>
 
-<script>
-  const audio = document.getElementById("bgm");
-  const btn = document.getElementById("muteBtn");
+  <!-- ✅ 음소거/재생 버튼 -->
+  <button id="muteBtn" aria-label="mute">🔇</button>
 
-  audio.muted = true;
-  audio.volume = 0.15;
+  <!-- ✅ 생각의 창 -->
+  <div id="thoughtOverlay">
+    <div class="thoughtBox">
+      <div class="thoughtText">
+우리는
+강아지를 먼저 보지 않습니다.
+그 아이의 호흡,
+눈의 움직임,
+긴장된 발끝을 먼저 봅니다.
 
-  const startAudio = async () => {
-    try { await audio.play(); } catch(e){}
-    document.removeEventListener("pointerdown", startAudio);
-  };
-  document.addEventListener("pointerdown", startAudio);
+보드레도그는
+빠르게 끝내는 곳이 아니라
+천천히 이해하는 곳입니다.
+      </div>
+      <div class="hint">아무 곳이나 클릭하면 닫혀요</div>
+    </div>
+  </div>
 
-  btn.onclick = (e) => {
-    e.stopPropagation();
-    audio.muted = !audio.muted;
-    btn.textContent = audio.muted ? "🔇" : "🔊";
-    if (!audio.muted && audio.paused) audio.play().catch(()=>{});
-  };
-</script>
+  <script>
+    // 요소
+    const symbol = document.getElementById("symbolBtn");
+    const overlay = document.getElementById("thoughtOverlay");
+    const audio = document.getElementById("bgm");
+    const muteBtn = document.getElementById("muteBtn");
+
+    // 오버레이 열기/닫기
+    symbol.addEventListener("click", () => {
+      overlay.style.display = "flex";
+    });
+    overlay.addEventListener("click", () => {
+      overlay.style.display = "none";
+    });
+
+    // iOS/크롬 자동재생 제한: 첫 터치에 재생 시도
+    audio.volume = 0.15;
+    audio.muted = true; // 기본은 음소거로 시작(원하면 false로)
+    const tryPlay = async () => { try { await audio.play(); } catch(e){} };
+    document.addEventListener("pointerdown", tryPlay, { once:true });
+
+    // 음소거 버튼
+    const renderMuteIcon = () => {
+      muteBtn.textContent = audio.muted ? "🔇" : "🔊";
+    };
+    renderMuteIcon();
+
+    muteBtn.addEventListener("click", async (e) => {
+      e.stopPropagation();
+      audio.muted = !audio.muted;
+      renderMuteIcon();
+      if (!audio.muted) { try { await audio.play(); } catch(e){} }
+    });
+  </script>
 
 </body>
 </html>
-
