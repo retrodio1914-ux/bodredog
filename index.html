@@ -57,19 +57,24 @@
     }
 
     /* 생각의 창(오버레이) */
-    #thoughtOverlay{
-      position: fixed;
-      inset: 0;
-      display: none;               /* 기본은 숨김 */
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,.55);
-      backdrop-filter: blur(6px);
-      z-index: 999;
-      padding: 24px;
-      background: url("about-bg.png") center/cover no-repeat;
-background-color: rgba(0,0,0,0.25);
-    }
+   #thoughtOverlay{
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,0.35),
+      rgba(0,0,0,0.35)
+    ),
+    url("about-bg.png") center / cover no-repeat;
+
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  padding: 24px;
+}
 
     /* 창 내용 박스 */
     .thoughtBox{
