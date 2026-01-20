@@ -14,7 +14,24 @@
       font-family: serif;
       #thoughtOverlay .thoughtBox { display: none; }
     }
+#thoughtOverlay {
+  position: fixed;
+  inset: 0;
+  display: none;              /* 기본은 숨김 */
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.55);
+  z-index: 999;
+}
 
+.thoughtImage {
+  max-width: 90vw;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+}
     /* 상단 심볼 버튼(임시: 텍스트/이모지) */
     #symbolBtn{
       position: fixed;
